@@ -13,4 +13,36 @@
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
     </style>
+
+    <style name="Base.Theme.Mars" parent="Theme.MarsWeather">
+        <item name="colorPrimary">@color/primary_color</item>
+        <item name="colorPrimaryVariant">@color/dark_primary</item>
+        <item name="colorOnPrimary">@color/text_icons_color</item>
+        <item name="colorSecondary">@color/accents_color</item>
+        <item name="colorSecondaryVariant">@color/primary_text_color</item>
+        <item name="colorOnSecondary">@color/secondary_text_color</item>
+    </style>
+
+    <style name="Theme.Mars.V24" parent="Base.Theme.Mars">
+        <item name="materialButtonStyle">@style/Mars_Button_style</item>
+        <item name="toolbarStyle">@style/Mars.App.Toolbar</item>
+    </style>
+
+    <style name="Mars_Button_style" parent="Widget.MaterialComponents.Button">
+        <item name="colorPrimary">@color/dark_primary</item>
+        <item name="android:textAppearance">@style/TextAppearance.App.Button</item>
+    </style>
+
+    <style name="TextAppearance.App.Button" parent="TextAppearance.MaterialComponents.Button">
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="Mars.App.Toolbar" parent="Widget.MaterialComponents.Toolbar.Primary">
+       <item name="shapeAppearance">@style/Mars.Toolbar.shape</item>
+    </style>
+
+    <style name="Mars.Toolbar.shape" parent="Widget.Material3.Toolbar">
+        <item name="elevation">10dp</item>
+    </style>
+
 </resources>
