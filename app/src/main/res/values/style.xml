@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Widget.App.Toolbar" parent="Widget.Material3.AppBarLayout">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.App.Toolbar</item>
+    </style>
+
+    <style name="ThemeOverlay.App.Toolbar" parent="">
+        <item name="colorSurface">@color/primary_color</item>
+        <item name="colorOnSurface">@color/text_icons_color</item>
+
+    </style>
+</resources>

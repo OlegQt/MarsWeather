@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/open_log"
+        android:icon="@drawable/ic_arrow_back_24"
+        android:title="Show log"
+        android:iconTint="@color/text_icons_color"/>
+</menu>
