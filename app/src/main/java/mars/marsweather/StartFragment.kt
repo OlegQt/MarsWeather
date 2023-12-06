@@ -5,14 +5,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewbinding.ViewBinding
+import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
 
 class StartFragment : Fragment() {
     private var _vm: StartVm? = null
     private val vm:StartVm get() = _vm ?: throw Exception("Start viewModel is null")
+
+    private var image:ImageView? = null
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -28,8 +32,10 @@ class StartFragment : Fragment() {
         // For ViewModel
         setObservers()
 
+        image =  view.findViewById(R.id.mars_photo)
+
         view.findViewById<Button>(R.id.btn_action).setOnClickListener {
-            showSnack("Click")
+            vm.loadPhotoFromMars()
         }
     }
 
@@ -37,11 +43,22 @@ class StartFragment : Fragment() {
         vm.state.observe(viewLifecycleOwner){
             showSnack(it)
         }
+
+        vm.imageMarsUrl.observe(viewLifecycleOwner){
+            if (it.isNotEmpty()){
+                Glide
+                    .with(this)
+                    .load(it)
+                    .centerCrop()
+                    .into(image!!)
+            }
+        }
     }
 
     private fun showSnack(txt:String){
         Snackbar.make(requireView(), txt, Snackbar.LENGTH_SHORT)
             .setTextColor(resources.getColor(R.color.dark_primary, requireContext().theme))
+            .setTextMaxLines(20)
             .show()
     }
 }
