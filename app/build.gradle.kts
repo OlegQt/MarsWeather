@@ -45,7 +45,16 @@ dependencies {
     implementation("com.google.android.material:material:1.9.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
 
+    // Retrofit
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.0.0")
+
+    // Navigation
     implementation("androidx.navigation:navigation-fragment:2.6.0")
+
+    // Glide
+    implementation("com.github.bumptech.glide:glide:5.0.0-rc01")
+
 
     // Testing
     testImplementation("junit:junit:4.13.2")
