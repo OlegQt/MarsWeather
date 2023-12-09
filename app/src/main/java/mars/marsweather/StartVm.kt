@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
 
 class StartVm:ViewModel() {
@@ -19,9 +20,12 @@ class StartVm:ViewModel() {
         _state.value = "Init"
     }
 
-    fun loadPhotoFromMars(){
-        viewModelScope.launch {
-            val response = clientNasa.loadPhotos()
+    fun loadPhotoFromMars(date:String){
+        val errorHandler = CoroutineExceptionHandler { coroutineContext, throwable ->
+            _state.postValue(throwable.message)
+        }
+        viewModelScope.launch(errorHandler) {
+            val response = clientNasa.loadPhotos(date)
             if(response?.code()==200){
                 val body = response.body()
                 body?.let {
@@ -29,7 +33,7 @@ class StartVm:ViewModel() {
                 }
             }
             else{
-                _state.value = response?.code().toString()
+                _state.postValue(response?.code().toString())
             }
         }
     }

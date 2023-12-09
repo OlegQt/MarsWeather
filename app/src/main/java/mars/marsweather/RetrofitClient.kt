@@ -17,10 +17,10 @@ class RetrofitClient {
             .build()
     }
 
-    suspend fun loadPhotos():Response<PhotoResponse>?{
+    suspend fun loadPhotos(date:String):Response<PhotoResponse>?{
         val queryParams = mutableMapOf<String,String>()
         queryParams["api_key"] = token
-        queryParams["earth_date"] = "2023-12-01"
+        queryParams["earth_date"] = date//"2023-12-01"
         queryParams["page"] = "1"
         queryParams["camera"] = cameraName
 
