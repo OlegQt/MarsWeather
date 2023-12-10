@@ -22,7 +22,7 @@ class StartFragment : Fragment() {
     private val vm: StartVm get() = _vm ?: throw Exception("Start viewModel is null")
 
     private lateinit var _binding: FragmentStartBinding
-    private val binding:FragmentStartBinding get() = _binding
+    private val binding: FragmentStartBinding get() = _binding
 
     private var image: ImageView? = null
     override fun onCreateView(
@@ -59,42 +59,37 @@ class StartFragment : Fragment() {
         dateDlg.setOnDateSetListener { datePicker, year, month, day ->
             val strDate = with(StringBuilder()) {
                 append("$year-")
-                append("${month+1}-")
+                append("${month + 1}-")
                 append("$day")
             }.toString()
-            showSnack(strDate)
             binding.txtInputDate.setText(strDate)
+            vm.chooseNewDate(strDate)
         }
         dateDlg.show()
     }
 
     private fun setObservers() {
-        vm.state.observe(viewLifecycleOwner) {
-            showSnack(it)
-        }
-
-        vm.imageMarsUrl.observe(viewLifecycleOwner) {
-            if (it.isNotEmpty()) {
-                Glide
-                    .with(this)
-                    .load(it)
-                    .centerCrop()
-                    .into(image!!)
-            }
-        }
-
         lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED){
-                vm.fragmentState.collect{
-                    when(it){
-                        is MarsPhotoFragmentState.Content ->{}
-                        is MarsPhotoFragmentState.Loading ->{
-                            showSnack("LOADING")
-                        }
-                        else -> {}
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                vm.fragmentState.collect {
+                    if (it is MarsPhotoFragmentState.Content) {
+                        renderMarsPhoto(it.imageUrl)
+                    }
+                    if (it is MarsPhotoFragmentState.Loading) {
+                        showSnack("Loading")
                     }
                 }
             }
+        }
+    }
+
+    private fun renderMarsPhoto(imgUrl: String) {
+        if (imgUrl.isNotEmpty()) {
+            Glide
+                .with(this)
+                .load(imgUrl)
+                .centerCrop()
+                .into(image!!)
         }
     }
 
