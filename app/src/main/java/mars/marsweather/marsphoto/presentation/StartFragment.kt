@@ -72,12 +72,9 @@ class StartFragment : Fragment() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 vm.fragmentState.collect {
-                    if (it is MarsPhotoFragmentState.Content) {
-                        renderMarsPhoto(it.imageUrl)
-                    }
-                    if (it is MarsPhotoFragmentState.Loading) {
-                        showSnack("Loading")
-                    }
+                    if (it is MarsPhotoFragmentState.Content) renderMarsPhoto(it.imageUrl)
+                    if (it is MarsPhotoFragmentState.Loading) showSnack("Loading")
+                    if (it is MarsPhotoFragmentState.Error) showSnack(it.errorMsg)
                 }
             }
         }
