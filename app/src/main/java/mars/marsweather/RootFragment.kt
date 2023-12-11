@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import mars.marsweather.databinding.FragmentRootBinding
+import mars.marsweather.marsphoto.presentation.StartFragment
 
 class RootFragment : Fragment() {
     private var _binding: FragmentRootBinding? = null

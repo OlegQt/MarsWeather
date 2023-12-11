@@ -1,5 +1,6 @@
-package mars.marsweather
+package mars.marsweather.marsphoto.data
 
+import mars.marsweather.marsphoto.domain.PhotoResponse
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -17,10 +18,10 @@ class RetrofitClient {
             .build()
     }
 
-    suspend fun loadPhotos():Response<PhotoResponse>?{
+    suspend fun loadPhotos(date:String):Response<PhotoResponse>?{
         val queryParams = mutableMapOf<String,String>()
         queryParams["api_key"] = token
-        queryParams["earth_date"] = "2023-12-01"
+        queryParams["earth_date"] = date//"2023-12-01"
         queryParams["page"] = "1"
         queryParams["camera"] = cameraName
 

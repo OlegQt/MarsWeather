@@ -1,5 +1,6 @@
-package mars.marsweather
+package mars.marsweather.marsphoto.data
 
+import mars.marsweather.marsphoto.domain.PhotoResponse
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.QueryMap

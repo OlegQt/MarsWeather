@@ -1,23 +1,28 @@
-package mars.marsweather
+package mars.marsweather.marsphoto.presentation
 
-import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageView
-import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
-import androidx.viewbinding.ViewBinding
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.launch
+import mars.marsweather.R
+import mars.marsweather.databinding.FragmentStartBinding
 
 class StartFragment : Fragment() {
     private var _vm: StartVm? = null
     private val vm: StartVm get() = _vm ?: throw Exception("Start viewModel is null")
+
+    private lateinit var _binding: FragmentStartBinding
+    private val binding: FragmentStartBinding get() = _binding
 
     private var image: ImageView? = null
     override fun onCreateView(
@@ -25,8 +30,10 @@ class StartFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _vm = ViewModelProvider(this)[StartVm::class.java]
+        _binding = FragmentStartBinding.inflate(inflater, container, false)
+
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_start, container, false)
+        return _binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -37,11 +44,12 @@ class StartFragment : Fragment() {
 
         image = view.findViewById(R.id.mars_photo)
 
-        view.findViewById<Button>(R.id.btn_action).setOnClickListener {
-            vm.loadPhotoFromMars()
+        binding.btnAction.setOnClickListener {
+            //vm.loadPhotoFromMars(binding.txtInputDate.text.toString())
+            vm.uploadPhoto()
         }
 
-        view.findViewById<TextView>(R.id.txt_info).setOnClickListener {
+        binding.lblDateInput.setStartIconOnClickListener {
             openDatePicker()
         }
     }
@@ -50,29 +58,35 @@ class StartFragment : Fragment() {
         val dateDlg = DatePickerDialog(requireContext())
         dateDlg.setOnDateSetListener { datePicker, year, month, day ->
             val strDate = with(StringBuilder()) {
-                append("Year $year \n")
-                append("month $month \n")
-                append("day $day")
+                append("$year-")
+                append("${month + 1}-")
+                append("$day")
             }.toString()
-            showSnack(strDate)
+            binding.txtInputDate.setText(strDate)
+            vm.chooseNewDate(strDate)
         }
-        dateDlg.setMessage("Message")
         dateDlg.show()
     }
 
     private fun setObservers() {
-        vm.state.observe(viewLifecycleOwner) {
-            showSnack(it)
-        }
-
-        vm.imageMarsUrl.observe(viewLifecycleOwner) {
-            if (it.isNotEmpty()) {
-                Glide
-                    .with(this)
-                    .load(it)
-                    .centerCrop()
-                    .into(image!!)
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                vm.fragmentState.collect {
+                    if (it is MarsPhotoFragmentState.Content) renderMarsPhoto(it.imageUrl)
+                    if (it is MarsPhotoFragmentState.Loading) showSnack("Loading")
+                    if (it is MarsPhotoFragmentState.Error) showSnack(it.errorMsg)
+                }
             }
+        }
+    }
+
+    private fun renderMarsPhoto(imgUrl: String) {
+        if (imgUrl.isNotEmpty()) {
+            Glide
+                .with(this)
+                .load(imgUrl)
+                .centerCrop()
+                .into(image!!)
         }
     }
 
