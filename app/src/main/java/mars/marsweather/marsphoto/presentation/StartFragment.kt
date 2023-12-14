@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
@@ -73,11 +74,17 @@ class StartFragment : Fragment() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 vm.fragmentState.collect {
                     if (it is MarsPhotoFragmentState.Content) renderMarsPhoto(it.imageUrl)
-                    if (it is MarsPhotoFragmentState.Loading) showSnack("Loading")
+                    if (it is MarsPhotoFragmentState.Loading) showLoadingAnimation()
                     if (it is MarsPhotoFragmentState.Error) showSnack(it.errorMsg)
                 }
             }
         }
+    }
+
+    private fun showLoadingAnimation() {
+        binding.animLoading.isVisible = true
+        binding.marsPhoto.isVisible = false
+
     }
 
     private fun renderMarsPhoto(imgUrl: String) {
@@ -87,6 +94,9 @@ class StartFragment : Fragment() {
                 .load(imgUrl)
                 .centerCrop()
                 .into(image!!)
+            binding.marsPhoto.isVisible = true
+            binding.animLoading.isVisible = false
+
         }
     }
 
